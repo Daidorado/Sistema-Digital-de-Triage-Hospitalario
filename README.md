@@ -16,7 +16,7 @@ Permite que múltiples roles del equipo de guardia (admisión, enfermería, méd
 
 ## Demo en vivo
 
-🔗 [triagedigital.netlify.app](https://triagedigital.netlify.app)
+🔗 [triage-digital.netlify.app](https://triage-digital.netlify.app)
 
 > Acceso libre sin contraseña. Seleccioná un rol e ingresá tu nombre para explorar el sistema.
 
