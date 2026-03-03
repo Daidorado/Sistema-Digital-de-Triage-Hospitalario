@@ -1,88 +1,205 @@
-🏥 Sistema Digital de Triage Hospitalario
-MVP Funcional · Google Sheets + Apps Script · 2024–2025
+# TRIAGE DIGITAL
 
-Desarrollado de forma autónoma por Daiana M. Dorado — Licenciada en Enfermería
-Hospital de Urgencias, Córdoba, Argentina
+**Sistema de Triage Manchester para Guardia Hospitalaria**  
+Hospital Municipal de Urgencias · v10.6 · 2026  
+Desarrollado por **Lic. Daiana Dorado**
 
+---
 
-📋 Descripción
-Sistema digital de gestión de guardia hospitalaria que digitaliza y automatiza el flujo completo de triage, desde el registro del paciente hasta el cierre de la atención médica.
-Diseñado por una profesional clínica con conocimiento directo del protocolo Manchester, el sistema reemplaza el registro en papel por una estructura de datos relacional que permite trazabilidad en tiempo real, priorización automática por gravedad y visualización de métricas operativas.
-Problema que resuelve:
+## ¿Qué es?
 
-Falta de trazabilidad en el flujo de pacientes de guardia
-Registro manual propenso a errores y pérdida de información
-Ausencia de métricas operativas para la toma de decisiones clínicas
+TRIAGE DIGITAL es una aplicación web que digitaliza el proceso de triage de guardia siguiendo el **Manchester Triage System (MTS)**. Funciona completamente en el navegador, sin instalación ni base de datos externa, y está diseñada para operar desde cualquier dispositivo — computadora, tablet o celular.
 
+Permite que múltiples roles del equipo de guardia (admisión, enfermería, médicos, jefatura) trabajen sobre la misma cola de pacientes en tiempo real, cada uno con acceso a las funciones que le corresponden.
 
-⚙️ Cómo funciona — Arquitectura
-El sistema está construido sobre Google Sheets como base de datos relacional con automatización via Google Apps Script.
-Estructura de tablas
-┌─────────────────┐     ┌─────────────────┐
-│    INGRESOS     │────▶│     TRIAGE      │
-│  (registro QR)  │     │ (clasificación) │
-└─────────────────┘     └────────┬────────┘
-                                 │
-                    ┌────────────▼────────┐
-                    │       MEDICO        │
-                    │  (atención clínica) │
-                    └────────────┬────────┘
-                                 │
-                    ┌────────────▼────────┐
-                    │    LOG_EVENTOS      │
-                    │ (auditoría completa)│
-                    └─────────────────────┘
-Flujo de estados
-Registro QR → Espera Triage → En Triage → Espera Médico → En Atención → Cerrado
-Cada cambio de estado dispara un trigger onEdit que registra timestamp, usuario y datos clínicos en LOG_EVENTOS.
-Componentes principales
-ComponenteTecnologíaFunciónFormulario de ingresoGoogle Forms + QRRegistro de pretriage sin contactoMotor de automatizaciónGoogle Apps ScriptTriggers, lógica condicional, cambios de estadoBase de datosGoogle Sheets (4 tablas)Almacenamiento relacional de eventos clínicosDashboardGoogle Sheets + fórmulasKPIs, semáforo Manchester, tiempos de esperaPrototipo webHTMLInterfaz experimental para futura migraciónIntegración HISLógica por IDVinculación con sistema EcHos por historia clínica
+---
 
-📸 Capturas / Demo
+## Demo en vivo
 
-🔧 Sección en construcción — próximamente se agregarán capturas del dashboard, formulario QR y vista de cola de espera.
+🔗 [triagedigital.netlify.app](https://triagedigital.netlify.app)
 
-Para una demo del sistema, podés contactarme en: doradodai65@gmail.com
+> Acceso libre sin contraseña. Seleccioná un rol e ingresá tu nombre para explorar el sistema.
 
-🛠️ Stack Tecnológico
-Google Sheets        → Estructura relacional tipo base de datos
-Google Apps Script   → JavaScript server-side, automatización
-Triggers onEdit      → Respuesta automática a cambios de estado
-QUERY / FILTER       → Consultas dinámicas entre tablas
-HTML                 → Prototipo de interfaz web
-Conceptos SQL        → Diseño de arquitectura preparada para migración
-EcHos (HIS)          → Integración lógica por ID de historia clínica
+---
 
-🗺️ Próximos pasos — Roadmap
-v1.1 — Corto plazo
+## Funcionalidades
 
- Agregar autenticación por rol (enfermero / médico / administrativo)
- Exportación de reportes diarios en PDF
- Notificaciones automáticas por tiempo de espera excedido
+### Gestión de pacientes
+- Registro de ingreso con datos completos (nombre, DNI, HC, edad, sexo, obra social)
+- Cola de triage ordenada por prioridad y tiempo de espera
+- Cambio de prioridad con motivo obligatorio y trazabilidad completa
+- Re-triage con historial de clasificaciones por episodio
 
-v2.0 — Migración web
+### Triage Manchester completo
+- 53 motivos de consulta con discriminadores automáticos
+- Clasificación por 5 colores: Rojo / Naranja / Amarillo / Verde / Azul
+- Cronómetro Manchester por paciente con alerta visual al superar el tiempo objetivo
 
- Migrar base de datos a PostgreSQL o Supabase
- Desarrollar frontend en React o framework similar
- API REST para integración nativa con EcHos
- App móvil para registro de pretriage desde dispositivos del hospital
+### Signos vitales y evaluación clínica
+- FC, FR, TA, SpO₂, Temperatura, Glucemia, Pico Flujo
+- Escala EVA (dolor 0–10) con colorización automática
+- Glasgow simplificado (Alerta / Confuso / Somnoliento / No responde)
+- Antecedentes Patológicos (APP): HTA, DBT, Cardiopatía, Asmático, Pte. Renal, Epiléptico, Anticoagulado, Alergia, Úlcera Estomacal, Psiquiátrico
 
-v3.0 — Inteligencia clínica
+### Protocolo HMU — Prioridad Amarillo
+Se activa automáticamente cuando EVA es 5, 6 o 7, o cuando la temperatura supera 38.5°C:
 
- Modelo predictivo de demanda por franja horaria
- Alertas automáticas por patrones de gravedad
- Integración con expediente clínico electrónico completo
+**Adultos** — grilla de 4 medicamentos:
+| Medicamento | Dosis | Vía |
+|-------------|-------|-----|
+| Paracetamol | 1 g | V.O. |
+| Naproxeno | 500 mg | V.O. |
+| Ketorolaco | 20 mg | V.O. |
+| Ketorolaco | 10 mg | S.L. |
 
+> Si el paciente tiene Alergia, Úlcera Estomacal, Insuf. Renal o Anticoagulado marcado en APP, los AINES se bloquean automáticamente. Solo Paracetamol queda habilitado.
 
-👩‍⚕️ Autora
-Daiana M. Dorado
-Licenciada en Enfermería · Universidad Católica de Córdoba (2025)
-Cursando: Inteligencia Artificial y Ciencias de Datos · Instituto Superior Santo Domingo
-📍 Córdoba, Argentina
-📧 doradodai65@gmail.com
+**Pediátrico** — selector en dos pasos:
+- Presentación: Gotas 10% (hasta 2 años) o Jarabe 120 mg/5 mL (2–11 años)
+- Rango de peso/edad → dosis exacta del protocolo HMU
 
-📄 Licencia
-Este proyecto es de uso educativo y profesional.
-Desarrollado en contexto hospitalario real — datos clínicos anonimizados.
+### Vista médica
+- Lista de pacientes con triage completado, ordenados por color Manchester y tiempo
+- Panel clínico completo: signos vitales con KPIs visuales, historial de triage, APP y medicación
+- Registro de conducta: Alta, Internación, Derivación, Observación, Receta, Turno programado
+- Nota médica libre y cierre de episodio
 
-"Construido desde adentro del sistema de salud, para mejorarlo."
+### Tablero EN VIVO (sin login)
+- Contadores por color Manchester en tiempo real
+- Lista de pacientes activos con estado y tiempo
+- Actualización automática cada 10 segundos
+- Disponible para cualquier servicio del hospital (Rayos, Laboratorio, Farmacia) sin necesidad de identificarse
+
+### Buscador global
+- Botón 🔍 BUSCAR siempre visible en el header
+- Búsqueda por nombre, DNI, HC o motivo de consulta
+- Navega directamente a la vista correspondiente del paciente
+
+### Tablero de indicadores
+- Métricas por turno activo (Mañana 07:00–18:59 / Noche 19:00–06:59)
+- Distribución por color Manchester, tiempos promedio, motivos más frecuentes
+- Detección automática de turno por timezone America/Argentina/Buenos_Aires
+
+### Roles y permisos
+| Rol | Acceso |
+|-----|--------|
+| Admisión | Ingreso de pacientes |
+| Enfermería Triage | Triage completo, signos vitales, medicación protocolo |
+| Médico (Clínica / Cirugía / Traumatología / Guardia) | Vista médica, conducta, cierre de episodio |
+| Administrativo | Cola general, tablero, ingreso |
+| Jefe de Guardia | Vista completa en modo lectura |
+| Admin Sistema | Acceso total |
+
+### Log y trazabilidad
+- Registro cronológico de todas las acciones por episodio
+- Trazabilidad completa con usuario, timestamp y descripción
+- Historial de re-triajes por paciente
+
+---
+
+## Tecnología
+
+| Componente | Detalle |
+|------------|---------|
+| Frontend | HTML5 · CSS3 · JavaScript vanilla (sin frameworks) |
+| Tipografías | Bebas Neue · IBM Plex Mono · IBM Plex Sans (Google Fonts) |
+| Datos | En memoria del navegador (localStorage no requerido) |
+| PWA | Instalable en dispositivos móviles via Chrome/Edge |
+| Deployment | Netlify (static) · compatible con cualquier servidor web |
+| Backend (próxima fase) | Flask + SQLAlchemy + PostgreSQL |
+
+La aplicación es un **archivo HTML único** (`index.html`) sin dependencias externas de runtime. Todo el CSS, JavaScript y la lógica clínica están embebidos en el mismo archivo.
+
+---
+
+## Estructura del repositorio
+
+```
+/
+├── index.html          # Aplicación completa (todo en un archivo)
+├── netlify.toml        # Configuración de deployment para Netlify
+└── README.md           # Este archivo
+```
+
+---
+
+## Instalación y uso
+
+### Opción 1 — Uso directo (más simple)
+Abrir `index.html` en cualquier navegador moderno. No requiere servidor ni instalación.
+
+### Opción 2 — Servidor local
+```bash
+# Python
+python3 -m http.server 8080
+
+# Node.js
+npx serve .
+```
+Abrir `http://localhost:8080` en el navegador.
+
+### Opción 3 — Netlify (deploy en 1 minuto)
+1. Hacer fork de este repositorio
+2. Ir a [netlify.com](https://netlify.com) → New site from Git
+3. Conectar el repositorio → deploy automático
+
+O bien: arrastrar el archivo `index.html` + `netlify.toml` directamente al panel de Netlify (drag & drop deploy).
+
+---
+
+## Compatibilidad
+
+| Navegador | Versión mínima |
+|-----------|---------------|
+| Chrome / Edge | 90+ |
+| Firefox | 88+ |
+| Safari | 14+ |
+
+- Responsive: pantallas desde 360px (celular) hasta 4K
+- Instalable como PWA en Android e iOS
+- Funciona sin conexión a internet si se despliega en red local
+
+---
+
+## Consideraciones clínicas
+
+> Este sistema es una **herramienta de apoyo** al triage y no reemplaza el criterio clínico del profesional de salud. Las clasificaciones Manchester y las recomendaciones de medicación siguen el protocolo del Hospital Municipal de Urgencias. Toda decisión clínica es responsabilidad del profesional interviniente.
+
+El protocolo de medicación (Protocolo HMU) fue elaborado bajo la supervisión del equipo médico del Hospital Municipal de Urgencias, con base en la guía de la Dra. Pahnke y la Dra. Leguizamón.
+
+---
+
+## Estado del proyecto
+
+| Módulo | Estado |
+|--------|--------|
+| Triage Manchester (53 motivos) | ✅ Producción |
+| Signos vitales y APP | ✅ Producción |
+| Protocolo HMU Amarillo | ✅ Producción |
+| Vista médica y conductas | ✅ Producción |
+| Tablero EN VIVO | ✅ Producción |
+| Buscador global | ✅ Producción |
+| PWA (instalable) | ✅ Producción |
+| Backend Flask + PostgreSQL | 🔄 En desarrollo |
+| Integración ecHos (HIS) | 🔄 En desarrollo |
+| Autenticación con contraseña | 📋 Planificado |
+| Modo offline completo | 📋 Planificado |
+
+---
+
+## Próxima fase
+
+- **Backend persistente**: Flask + SQLAlchemy + PostgreSQL para guardar datos entre sesiones y compartir la cola entre múltiples dispositivos en red simultáneamente
+- **Integración ecHos**: conexión con el sistema de gestión hospitalaria ecHos para importar datos de pacientes automáticamente
+- **Autenticación**: acceso por usuario y contraseña con roles gestionados desde administración
+
+---
+
+## Licencia
+
+Uso interno — Hospital Municipal de Urgencias.  
+No distribuir sin autorización.
+
+---
+
+**TRIAGE DIGITAL** · Lic. Daiana Dorado · Hospital Municipal de Urgencias · 2026
