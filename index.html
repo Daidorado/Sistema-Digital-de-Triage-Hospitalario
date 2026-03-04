@@ -243,41 +243,56 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .t-atento{color:var(--naranja);font-weight:600}
 /* ===== LOGIN / SESSION ===== */
 #login-screen{
-  position:fixed;inset:0;background:var(--text);
-  display:flex;align-items:flex-start;justify-content:center;
+  position:fixed;inset:0;
+  background:linear-gradient(145deg,#f0f2f5 0%,#e8eaed 40%,#dde0e5 100%);
+  display:flex;align-items:center;justify-content:center;
   z-index:9999;flex-direction:column;gap:0;
-  overflow-y:auto;padding:24px 0 40px;
+  overflow-y:auto;padding:32px 16px;
+}
+/* Subtle grid pattern overlay */
+#login-screen::before{
+  content:'';position:fixed;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  z-index:0;
 }
 .login-box{
-  background:var(--surface);border-radius:4px;
-  padding:28px 32px;width:min(540px,96vw);margin:0 auto;
+  position:relative;z-index:1;
+  background:#ffffff;
+  border-radius:8px;
+  padding:32px 36px;
+  width:min(560px,96vw);
+  margin:0 auto;
+  box-shadow:0 4px 24px rgba(0,0,0,.10),0 1px 4px rgba(0,0,0,.06);
+  border-top:4px solid #1A1A1A;
 }
-@media(max-width:600px){
-  #login-screen{padding:0}
-  .login-box{
-    width:100%;border-radius:0;padding:20px 14px;
-    min-height:100dvh;box-sizing:border-box;
-  }
+.login-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:5px;
+  color:#1A1A1A;margin-bottom:4px;text-align:center;
+  position:relative;z-index:1;
 }
-.login-logo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:4px;color:white;margin-bottom:6px;text-align:center}
-.login-logo span{color:#c8b896}
-.login-sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#888;text-align:center;margin-bottom:24px;letter-spacing:1px}
-@media(max-width:600px){
-  .login-logo{font-size:30px;letter-spacing:3px}
-  .login-sub{font-size:10px;margin-bottom:16px}
+.login-logo span{color:#b07800}
+.login-sub{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:#888;text-align:center;margin-bottom:28px;letter-spacing:1.5px;
+  position:relative;z-index:1;
 }
-.login-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:20px;color:var(--text)}
+.login-title{
+  font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;
+  margin-bottom:20px;color:#1A1A1A;
+  padding-bottom:10px;border-bottom:1px solid #e5e7eb;
+}
 .rol-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
 .rol-btn{
-  padding:14px 10px;border:2px solid var(--border);border-radius:2px;
-  background:var(--surface);font-family:'IBM Plex Sans',sans-serif;
+  padding:14px 10px;border:1.5px solid #d1d5db;border-radius:6px;
+  background:#fafafa;font-family:'IBM Plex Sans',sans-serif;
   font-size:12px;font-weight:700;cursor:pointer;text-align:center;
-  transition:all .15s;color:var(--text);
+  transition:all .15s;color:#1A1A1A;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   min-height:78px;
 }
-.rol-btn:hover{border-color:var(--text);background:var(--surface2)}
-.rol-btn.active{background:var(--text);color:white;border-color:var(--text)}
+.rol-btn:hover{border-color:#1A1A1A;background:#f3f4f6;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.rol-btn.active{background:#1A1A1A;color:white;border-color:#1A1A1A;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .rol-btn .ri{font-size:24px;display:block;margin-bottom:5px}
 @media(max-width:600px){
   .rol-grid{gap:6px}
@@ -832,26 +847,29 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
     <!-- TURNO AUTOMÁTICO -->
     <div class="form-group">
       <label class="form-label">Turno detectado automáticamente</label>
-      <div id="login-turno-auto" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:2px">
+      <div id="login-turno-auto" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px">
         <div id="login-turno-badge" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700"></div>
         <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace" id="login-turno-detalle"></div>
       </div>
     </div>
 
-    <button class="btn-primary" id="btn-ingresar" onclick="iniciarSesion()" disabled style="width:100%;justify-content:center;padding:16px;font-size:14px;min-height:52px;touch-action:manipulation">
+    <button class="btn-primary" id="btn-ingresar" onclick="iniciarSesion()" disabled style="width:100%;justify-content:center;padding:16px;font-size:14px;min-height:52px;touch-action:manipulation;border-radius:6px">
       → Ingresar al Sistema
     </button>
-    <p style="font-size:10px;color:var(--muted);text-align:center;margin-top:12px;font-family:'IBM Plex Mono',monospace">
+    <p style="font-size:10px;color:#9ca3af;text-align:center;margin-top:12px;font-family:'IBM Plex Mono',monospace">
       Sistema de triage en paralelo con ecHos · Identificación por sesión sin contraseña
     </p>
 
-    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
-      <p style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px">
+    <div style="margin-top:16px;border-top:1px solid #e5e7eb;padding-top:16px">
+      <p style="font-size:10px;color:#9ca3af;text-align:center;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px">
         ¿SOLO QUERÉS VER EL ESTADO DE LA GUARDIA?
       </p>
-      <button onclick="abrirTableroPublico()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:transparent;border:2px solid var(--verde);color:var(--verde);padding:12px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .15s" onmouseover="this.style.background='var(--verde-bg)'" onmouseout="this.style.background='transparent'">
+      <button onclick="abrirTableroPublico()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:transparent;border:2px solid var(--verde);color:var(--verde);padding:12px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;border-radius:6px;transition:all .15s" onmouseover="this.style.background='var(--verde-bg)'" onmouseout="this.style.background='transparent'">
         <span style="font-size:18px">📺</span> VER TABLERO EN VIVO <span style="font-size:10px;font-weight:400;opacity:.7">— sin iniciar sesión</span>
       </button>
+    </div>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f3f4f6;text-align:center">
+      <span style="font-size:10px;color:#d1d5db;font-family:'IBM Plex Mono',monospace;letter-spacing:1px">HOSPITAL MUNICIPAL DE URGENCIAS · CÓRDOBA</span>
     </div>
   </div>
 </div>
