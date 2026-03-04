@@ -196,7 +196,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .mb-amarillo{background:var(--amarillo-bg);color:var(--amarillo);border-color:var(--amarillo-border)}
 .mb-verde{background:var(--verde-bg);color:var(--verde);border-color:var(--verde-border)}
 .mb-azul{background:var(--azul-bg);color:var(--azul);border-color:var(--azul-border)}
-.conducta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.conducta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
 .conducta-btn{padding:14px 10px;border:2px solid var(--border);border-radius:2px;background:var(--surface);font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .12s}
 .conducta-btn:hover{border-color:var(--medico);background:var(--medico-bg);color:var(--medico)}
 .conducta-btn.selected{background:var(--medico);border-color:var(--medico);color:white}
@@ -281,7 +281,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
   margin-bottom:8px;color:#1A1A1A;
   padding-bottom:6px;border-bottom:1px solid #e5e7eb;
 }
-.rol-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.rol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
 .rol-btn{
   padding:7px 8px;border:1.5px solid #d1d5db;border-radius:6px;
   background:#fafafa;font-family:'IBM Plex Sans',sans-serif;
@@ -320,7 +320,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .hdr-session-name{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ccc}
 .hdr-session-rol{font-size:9px;color:#888;letter-spacing:.5px;text-transform:uppercase}
 /* ===== TABLERO ===== */
-.tablero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.tablero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .tablero-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
 .tablero-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
 .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:18px 20px;position:relative;overflow:hidden}
@@ -380,7 +380,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .sv-body{padding:18px 16px;display:none}
 .sv-body.open{display:block}
 /* Grilla numérica */
-.sv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
 .sv-field label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;color:var(--muted);display:block;margin-bottom:4px}
 .sv-field label em{font-weight:400;font-style:normal;color:var(--border)}
 .sv-input{width:100%;padding:10px 8px;border:2px solid var(--border);border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;text-align:center;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s,background .15s}
@@ -401,7 +401,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .eva-btn.s9,.eva-btn.s10{background:#fff0f0;border-color:var(--rojo);color:var(--rojo)}
 .eva-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:4px;padding:0 1px}
 /* Glasgow */
-.gcs-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gcs-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .gcs-btn{padding:12px 6px;border:2px solid var(--border);border-radius:2px;background:var(--surface);cursor:pointer;text-align:center;transition:all .15s}
 .gcs-btn .gi{font-size:20px;display:block;margin-bottom:5px}
 .gcs-btn .gl{font-size:11px;font-weight:700;display:block}
@@ -774,7 +774,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .sv-doc-ts{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
 .sv-doc-body{padding:14px 16px}
 /* Grid de KPIs grandes */
-.sv-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.sv-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .sv-kpi{text-align:center;padding:16px 8px;border-radius:2px;border:2px solid var(--border);background:var(--surface)}
 .sv-kpi.ok{border-color:var(--verde-border);background:var(--verde-bg)}
 .sv-kpi.warn{border-color:var(--naranja-border);background:var(--naranja-bg)}
@@ -1197,7 +1197,7 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
     </div>
   </div>
   <div class="jefe-ro-banner" id="jefe-banner-cola">👁 SOLO VISUALIZACIÓN — Jefe de Guardia</div>
-  <div class="stats-row" style="grid-template-columns:repeat(4,1fr);max-width:680px;margin-bottom:20px">
+  <div class="stats-row" style="grid-template-columns:repeat(3,1fr);max-width:680px;margin-bottom:20px">
     <div class="stat-card rojo"><div class="stat-num" id="ct-cnt-c">0</div><div class="stat-label">CRÍTICO</div></div>
     <div class="stat-card naranja"><div class="stat-num" id="ct-cnt-p">0</div><div class="stat-label">PRIORIDAD</div></div>
     <div class="stat-card verde"><div class="stat-num" id="ct-cnt-e">0</div><div class="stat-label">ESTABLE</div></div>
@@ -3948,7 +3948,7 @@ document.addEventListener('keydown', e => {
     </div>
 
     <!-- Resumen numérico -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px" id="tp-resumen-row">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px" id="tp-resumen-row">
       <div class="tp-kpi"><div class="tp-kpi-val" id="tp-cnt-espera">0</div><div class="tp-kpi-lbl">En espera</div></div>
       <div class="tp-kpi"><div class="tp-kpi-val" id="tp-cnt-atencion">0</div><div class="tp-kpi-lbl">En atención</div></div>
       <div class="tp-kpi"><div class="tp-kpi-val" id="tp-cnt-obs">0</div><div class="tp-kpi-lbl">Observación</div></div>
