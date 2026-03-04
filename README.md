@@ -105,7 +105,7 @@ Se activa automáticamente cuando EVA es 5, 6 o 7, o cuando la temperatura super
 | Tipografías | Bebas Neue · IBM Plex Mono · IBM Plex Sans (Google Fonts) |
 | Datos | En memoria del navegador (localStorage no requerido) |
 | PWA | Instalable en dispositivos móviles via Chrome/Edge |
-| Deployment | Netlify (static) · compatible con cualquier servidor web |
+| Deployment | GitHub Pages (static) · compatible con cualquier servidor web |
 | Backend (próxima fase) | Flask + SQLAlchemy + PostgreSQL |
 
 La aplicación es un **archivo HTML único** (`index.html`) sin dependencias externas de runtime. Todo el CSS, JavaScript y la lógica clínica están embebidos en el mismo archivo.
@@ -138,12 +138,10 @@ npx serve .
 ```
 Abrir `http://localhost:8080` en el navegador.
 
-### Opción 3 — Netlify (deploy en 1 minuto)
+### Opción 3 — GitHub Pages (deploy en 1 minuto)
 1. Hacer fork de este repositorio
-2. Ir a [netlify.com](https://netlify.com) → New site from Git
-3. Conectar el repositorio → deploy automático
-
-O bien: arrastrar el archivo `index.html` + `netlify.toml` directamente al panel de Netlify (drag & drop deploy).
+2. Ir a Settings → Pages
+3. Branch: main · Folder: / (root) → Save
 
 ---
 
@@ -202,4 +200,4 @@ No distribuir sin autorización.
 
 ---
 
-**TRIAGE DIGITAL** · Lic. Daiana Dorado · Hospital Municipal de Urgencias · 2026
+**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · Hospital Municipal de Urgencias · 2026
