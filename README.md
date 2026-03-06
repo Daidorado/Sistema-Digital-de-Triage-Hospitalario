@@ -1,7 +1,7 @@
 # TRIAGE DIGITAL
 
 **Sistema de Triage Manchester para Guardia Hospitalaria**  
-Hospital Municipal de Urgencias · v10.6 · 2026  
+Guardia de Urgencias · v10.6 · 2026
 Desarrollado por **Lic. Daiana Dorado**
 
 ---
