@@ -199,4 +199,4 @@ Proyecto personal de portfolio — Lic. Daiana M. Dorado · 2026
 
 ---
 
-**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · 2026
+**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · 2026 
