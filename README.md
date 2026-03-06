@@ -41,7 +41,7 @@ Permite que múltiples roles del equipo de guardia (admisión, enfermería, méd
 - Glasgow simplificado (Alerta / Confuso / Somnoliento / No responde)
 - Antecedentes Patológicos (APP): HTA, DBT, Cardiopatía, Asmático, Pte. Renal, Epiléptico, Anticoagulado, Alergia, Úlcera Estomacal, Psiquiátrico
 
-### Protocolo HMU — Prioridad Amarillo
+### Protocolo de medicación — Prioridad Amarillo
 Se activa automáticamente cuando EVA es 5, 6 o 7, o cuando la temperatura supera 38.5°C:
 
 **Adultos** — grilla de 4 medicamentos:
@@ -56,7 +56,7 @@ Se activa automáticamente cuando EVA es 5, 6 o 7, o cuando la temperatura super
 
 **Pediátrico** — selector en dos pasos:
 - Presentación: Gotas 10% (hasta 2 años) o Jarabe 120 mg/5 mL (2–11 años)
-- Rango de peso/edad → dosis exacta del protocolo HMU
+- Rango de peso/edad → dosis exacta del protocolo
 
 ### Vista médica
 - Lista de pacientes con triage completado, ordenados por color Manchester y tiempo
@@ -117,7 +117,7 @@ La aplicación es un **archivo HTML único** (`index.html`) sin dependencias ext
 ```
 /
 ├── index.html          # Aplicación completa (todo en un archivo)
-├── netlify.toml        # Configuración de deployment para Netlify
+├── netlify.toml        # Configuración de deployment
 └── README.md           # Este archivo
 ```
 
@@ -161,9 +161,9 @@ Abrir `http://localhost:8080` en el navegador.
 
 ## Consideraciones clínicas
 
-> Este sistema es una **herramienta de apoyo** al triage y no reemplaza el criterio clínico del profesional de salud. Las clasificaciones Manchester y las recomendaciones de medicación siguen el protocolo del Hospital Municipal de Urgencias. Toda decisión clínica es responsabilidad del profesional interviniente.
+> Este sistema es una **herramienta de apoyo** al triage y no reemplaza el criterio clínico del profesional de salud. Toda decisión clínica es responsabilidad del profesional interviniente.
 
-El protocolo de medicación (Protocolo HMU) fue elaborado bajo la supervisión del equipo médico del Hospital Municipal de Urgencias, con base en la guía de la Dra. Pahnke y la Dra. Leguizamón.
+El protocolo de medicación fue desarrollado como referencia clínica para el diseño de las funcionalidades del sistema.
 
 ---
 
@@ -173,13 +173,13 @@ El protocolo de medicación (Protocolo HMU) fue elaborado bajo la supervisión d
 |--------|--------|
 | Triage Manchester (53 motivos) | ✅ Producción |
 | Signos vitales y APP | ✅ Producción |
-| Protocolo HMU Amarillo | ✅ Producción |
+| Protocolo de medicación Amarillo | ✅ Producción |
 | Vista médica y conductas | ✅ Producción |
 | Tablero EN VIVO | ✅ Producción |
 | Buscador global | ✅ Producción |
 | PWA (instalable) | ✅ Producción |
 | Backend Flask + PostgreSQL | 🔄 En desarrollo |
-| Integración ecHos (HIS) | 🔄 En desarrollo |
+| Integración HIS | 🔄 En desarrollo |
 | Autenticación con contraseña | 📋 Planificado |
 | Modo offline completo | 📋 Planificado |
 
@@ -188,16 +188,15 @@ El protocolo de medicación (Protocolo HMU) fue elaborado bajo la supervisión d
 ## Próxima fase
 
 - **Backend persistente**: Flask + SQLAlchemy + PostgreSQL para guardar datos entre sesiones y compartir la cola entre múltiples dispositivos en red simultáneamente
-- **Integración ecHos**: conexión con el sistema de gestión hospitalaria ecHos para importar datos de pacientes automáticamente
+- **Integración HIS**: conexión con el sistema de gestión hospitalaria institucional para importar datos de pacientes automáticamente
 - **Autenticación**: acceso por usuario y contraseña con roles gestionados desde administración
 
 ---
 
 ## Licencia
 
-Uso interno — Hospital Municipal de Urgencias.  
-No distribuir sin autorización.
+Proyecto personal de portfolio — Lic. Daiana M. Dorado · 2026
 
 ---
 
-**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · Hospital Municipal de Urgencias · 2026
+**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · 2026
