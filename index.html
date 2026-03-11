@@ -184,7 +184,19 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
 .retriage-item .ri-header{display:flex;gap:10px;align-items:center;margin-bottom:4px}
 .retriage-item.current{border-left-color:var(--medico);background:var(--medico-bg)}
 /* MEDICO VIEW */
-.medico-layout{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.medico-layout{display:grid;grid-template-columns:220px 260px 1fr;gap:16px;align-items:start}
+.medico-cola-estados{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:12px;position:sticky;top:80px}
+.cola-estado-titulo{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.cola-item{padding:7px 10px;border-radius:2px;margin-bottom:4px;cursor:pointer;border-left:3px solid transparent;transition:all .12s}
+.cola-item:hover{background:var(--surface2)}
+.cola-item.activo{background:var(--medico-bg);border-left-color:var(--medico)}
+.cola-item-nombre{font-size:12px;font-weight:700;color:var(--text);font-family:'IBM Plex Sans',sans-serif}
+.cola-item-estado{font-size:10px;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.cola-badge{display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.cola-badge.abierto{background:var(--amarillo-bg);color:var(--amarillo)}
+.cola-badge.atendiendo{background:var(--medico-bg);color:var(--medico)}
+.cola-badge.cerrado{background:var(--surface2);color:var(--muted)}
+.cola-badge.observacion{background:var(--naranja-bg,#fff3e0);color:var(--naranja,#e67e22)}
 .pac-card{padding:14px;border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all .12s;background:var(--surface)}
 .pac-card:hover{border-color:var(--medico);background:var(--medico-bg)}
 .pac-card.active-pac{border-color:var(--medico);background:var(--medico-bg);border-width:2px}
@@ -1176,10 +1188,17 @@ header{background:var(--text);color:white;padding:0 28px;display:flex;align-item
   </div>
   <div class="jefe-ro-banner" id="jefe-banner-medico">👁 SOLO VISUALIZACIÓN — Jefe de Guardia · No puede modificar ni registrar datos</div>
   <div class="medico-layout">
+    <!-- COLUMNA 1: Cola de estados (todos los episodios) -->
+    <div class="medico-cola-estados">
+      <div class="cola-estado-titulo">📋 TODOS LOS EPISODIOS</div>
+      <div id="medico-cola-todos"><div style="font-size:11px;color:var(--muted);text-align:center;padding:16px">Sin episodios</div></div>
+    </div>
+    <!-- COLUMNA 2: Lista en espera médica -->
     <div>
       <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;color:var(--muted);margin-bottom:10px">PACIENTES EN ESPERA / ATENCIÓN</div>
       <div id="medico-lista-pacs"></div>
     </div>
+    <!-- COLUMNA 3: Panel médico -->
     <div id="medico-panel">
       <div class="triage-placeholder"><div class="big-num" style="color:var(--medico-border)">MD</div><p>Seleccioná un paciente de la lista<br>para ver su información y cargar conducta</p></div>
     </div>
@@ -2573,6 +2592,46 @@ function selPacTriage(id){
 // ============================================================
 // MÉDICO VIEW
 // ============================================================
+
+function renderMedicoColaEstados(){
+  const cont = document.getElementById('medico-cola-todos');
+  if(!cont) return;
+  
+  const todos = [...pacientes].sort((a,b) => {
+    const orden = {'EN ESPERA TRIAGE':0,'EN ESPERA MEDICO':1,'EN ATENCION':2,'OBSERVACION':3,'CERRADO':4};
+    return (orden[a.estado]??5) - (orden[b.estado]??5) || (a.timestamp - b.timestamp);
+  });
+
+  if(!todos.length){
+    cont.innerHTML = '<div style="font-size:11px;color:var(--muted);text-align:center;padding:16px">Sin episodios</div>';
+    return;
+  }
+
+  const estadoLabel = {
+    'EN ESPERA TRIAGE': {txt:'Triage', cls:'abierto'},
+    'EN ESPERA MEDICO': {txt:'Espera médico', cls:'abierto'},
+    'EN ATENCION': {txt:'En atención', cls:'atendiendo'},
+    'OBSERVACION': {txt:'Observación', cls:'observacion'},
+    'CERRADO': {txt:'Cerrado', cls:'cerrado'}
+  };
+
+  cont.innerHTML = todos.map(p => {
+    const est = estadoLabel[p.estado] || {txt: p.estado, cls:'abierto'};
+    const color = p.manchester ? `var(--${p.manchester.toLowerCase()})` : 'var(--muted)';
+    const isActive = p.id === medicoSelId;
+    return `<div class="cola-item ${isActive?'activo':''}" onclick="medicoSelId='${p.id}';renderMedicoPanel();renderMedicoColaEstados()">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
+        ${p.manchester?`<span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>`:''}
+        <div class="cola-item-nombre" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${p.nombre||'Sin nombre'}</div>
+      </div>
+      <div class="cola-item-estado">
+        <span class="cola-badge ${est.cls}">${est.txt}</span>
+        ${p.cie10?`<span style="font-size:9px;color:var(--medico);font-family:'IBM Plex Mono',monospace;margin-left:4px">${p.cie10.c}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderMedicoView(){
   const cont = document.getElementById('medico-lista-pacs');
   const nombreMedico = sesion?.nombre || null;
@@ -2645,6 +2704,7 @@ function renderMedicoView(){
 
   cont.innerHTML = html;
   if(medicoSelId) renderMedicoPanel();
+  renderMedicoColaEstados();
 }
 
 function selMedico(id){
@@ -2661,6 +2721,116 @@ function selMedico(id){
     actualizarTodo();
   }
   renderMedicoView();
+}
+
+
+// ══ CIE-10 URGENCIAS FRECUENTES ══
+const CIE10_BASICO = [
+  {c:'R07.4',d:'Dolor torácico inespecífico'},{c:'R07.0',d:'Dolor de garganta'},{c:'R51',d:'Cefalea'},
+  {c:'R10.0',d:'Dolor abdominal agudo'},{c:'R10.4',d:'Dolor abdominal inespecífico'},{c:'R11',d:'Náuseas y vómitos'},
+  {c:'R55',d:'Síncope y colapso'},{c:'R00.0',d:'Taquicardia'},{c:'R00.1',d:'Bradicardia'},
+  {c:'R03.0',d:'Hipertensión arterial'},{c:'J06.9',d:'Infección respiratoria aguda'},{c:'J18.9',d:'Neumonía'},
+  {c:'J45',d:'Asma bronquial'},{c:'J44.1',d:'EPOC agudizado'},{c:'A09',d:'Diarrea infecciosa'},
+  {c:'N10',d:'Pielonefritis aguda'},{c:'N23',d:'Cólico renal'},{c:'S00-S99',d:'Traumatismo (general)'},
+  {c:'S09.9',d:'Traumatismo craneal'},{c:'S80-S89',d:'Traumatismo rodilla/pierna'},{c:'S60-S69',d:'Traumatismo mano/muñeca'},
+  {c:'M54.5',d:'Lumbalgía'},{c:'M54.2',d:'Cervicobraquialgía'},{c:'G43',d:'Migraña'},
+  {c:'G40',d:'Epilepsia/convulsión'},{c:'F32',d:'Episodio depresivo'},{c:'F41.0',d:'Crisis de pánico'},
+  {c:'F10',d:'Intoxicación alcohólica'},{c:'T36-T50',d:'Intoxicación medicamentosa'},{c:'T51-T65',d:'Intoxicación por sustancias'},
+  {c:'K29.7',d:'Gastritis'},{c:'K37',d:'Apendicitis'},{c:'K80.5',d:'Cólico biliar'},{c:'K92.1',d:'Melena'},
+  {c:'I21',d:'Infarto agudo de miocardio'},{c:'I63',d:'ACV isquémico'},{c:'I64',d:'ACV hemorrágico'},
+  {c:'I26',d:'Tromboembolismo pulmonar'},{c:'E11.65',d:'Diabetes descompensada'},{c:'E16.0',d:'Hipoglucemia'},
+  {c:'L03',d:'Celulitis infecciosa'},{c:'T14.0',d:'Herida superficial'},{c:'T14.1',d:'Herida con hemorragia'},
+  {c:'Z03.8',d:'Observación sin diagnóstico'},{c:'R45.8',d:'Crisis conductual'},{c:'T71',d:'Asfixia'},
+  {c:'R04.2',d:'Hemoptisis'},{c:'R58',d:'Hemorragia inespecífica'},{c:'R41.3',d:'Confusión/desorientación'},
+  {c:'R40',d:'Alteración de conciencia'},{c:'R56.8',d:'Convulsión febril'},{c:'A41.9',d:'Sepsis'},
+  {c:'J96.0',d:'Insuficiencia respiratoria aguda'},{c:'N17',d:'Insuficiencia renal aguda'},
+  {c:'I50',d:'Insuficiencia cardíaca'},{c:'K85',d:'Pancreatitis aguda'},{c:'H10',d:'Conjuntivitis'},
+  {c:'H60',d:'Otitis externa'},{c:'H65',d:'Otitis media'},{c:'J02',d:'Faringoamigdalitis'},
+  {c:'K08.8',d:'Dolor dental'},{c:'N39.0',d:'Infección urinaria'},{c:'O20',d:'Amenaza de aborto'},
+  {c:'O47',d:'Contracciones prematuras'},{c:'T09.3',d:'Fractura columna'},{c:'S52',d:'Fractura radio/cúbito'},
+  {c:'S82',d:'Fractura tibia/peroné'},{c:'S72',d:'Fractura fémur'},{c:'S42',d:'Fractura húmero'},
+  {c:'S62',d:'Fractura mano'},{c:'M79.3',d:'Tendinitis'},{c:'S93.4',d:'Esguince tobillo'},
+  {c:'R68.8',d:'Fiebre sin foco'},{c:'B34.9',d:'Infección viral'},{c:'B99',d:'Enfermedad infecciosa'},
+  {c:'T78.1',d:'Reacción alérgica'},{c:'T78.0',d:'Shock anafiláctico'},{c:'R23.2',d:'Urticaria/rash'},
+  {c:'T30',d:'Quemadura'},{c:'T75.1',d:'Ahogamiento'},{c:'T14.9',d:'Lesión inespecífica'},
+  {c:'X84',d:'Autolesión'},{c:'T39',d:'Sobredosis analgésicos'},{c:'T42',d:'Sobredosis sedantes'},
+  {c:'R06.0',d:'Disnea'},{c:'R06.2',d:'Sibilancias'},{c:'R05',d:'Tos'},
+  {c:'R09.0',d:'Asfixia/apnea'},{c:'R01',d:'Soplo cardíaco'},{c:'R02',d:'Gangrena'},
+];
+
+const TOXICOS = [
+  'Alcohol etílico','Cocaína','Pasta base','Marihuana/Cannabis','Benzodiacepinas',
+  'Opioides','Metamfetamina','MDMA/Éxtasis','Ketamina','Psicofármacos',
+  'Analgésicos (sobredosis)','Antidepresivos','Organofosforados','Monóxido de carbono','Otra sustancia'
+];
+
+let cie10Modo = 'basico'; // basico | completo
+let cie10Busqueda = '';
+let cie10Seleccionado = null; // {c, d}
+
+// CIE-10 completo cargado bajo demanda
+let CIE10_COMPLETO = null;
+async function cargarCIECompleto(){
+  if(CIE10_COMPLETO) return;
+  // Generamos una lista extendida combinando básico + categorías expandidas
+  // En producción esto vendría de un JSON externo
+  CIE10_COMPLETO = [...CIE10_BASICO];
+  // Agregamos rangos adicionales simulados para demo
+  const extras = [
+    {c:'A00',d:'Cólera'},{c:'A01',d:'Fiebre tifoidea'},{c:'A15',d:'Tuberculosis pulmonar'},
+    {c:'A50',d:'Sífilis congénita'},{c:'B20',d:'VIH/SIDA'},{c:'B50',d:'Paludismo/malaria'},
+    {c:'C34',d:'Neoplasia pulmón'},{c:'C18',d:'Neoplasia colon'},{c:'D50',d:'Anemia ferropénica'},
+    {c:'E10',d:'Diabetes tipo 1'},{c:'E78',d:'Dislipemia'},{c:'F20',d:'Esquizofrenia'},
+    {c:'G35',d:'Esclerosis múltiple'},{c:'I10',d:'Hipertensión esencial'},{c:'I48',d:'Fibrilación auricular'},
+    {c:'J10',d:'Influenza'},{c:'J20',d:'Bronquitis aguda'},{c:'K25',d:'Úlcera gástrica'},
+    {c:'L40',d:'Psoriasis'},{c:'M05',d:'Artritis reumatoide'},{c:'N18',d:'Insuficiencia renal crónica'},
+    {c:'O10',d:'Hipertensión en embarazo'},{c:'P07',d:'Prematurez'},{c:'Q21',d:'Cardiopatía congénita'},
+    {c:'R50',d:'Fiebre de origen desconocido'},{c:'S00',d:'Traumatismo superficial cabeza'},
+    {c:'T20',d:'Quemadura cara'},{c:'U07.1',d:'COVID-19'},{c:'Z23',d:'Vacunación'},
+  ];
+  CIE10_COMPLETO = [...CIE10_BASICO, ...extras];
+}
+
+function cie10Filtrados(){
+  const lista = cie10Modo==='basico' ? CIE10_BASICO : (CIE10_COMPLETO||CIE10_BASICO);
+  if(!cie10Busqueda) return lista.slice(0,20);
+  const q = cie10Busqueda.toLowerCase();
+  return lista.filter(x => x.c.toLowerCase().includes(q)||x.d.toLowerCase().includes(q)).slice(0,30);
+}
+
+function selCIE10(codigo, desc){
+  cie10Seleccionado = {c:codigo, d:desc};
+  // Guardar en paciente activo
+  if(medicoSelId){
+    const p = pacientes.find(x=>x.id===medicoSelId);
+    if(p){ p.cie10 = {c:codigo, d:desc}; addLog(p,'Diagnóstico CIE-10: '+codigo+' — '+desc,'medico'); }
+  }
+  renderMedicoPanel();
+}
+
+function toggleCIEModo(){
+  cie10Modo = cie10Modo==='basico'?'completo':'basico';
+  if(cie10Modo==='completo') cargarCIECompleto();
+  renderMedicoPanel();
+}
+
+function selToxicoSustancia(val){
+  if(medicoSelId){
+    const p = pacientes.find(x=>x.id===medicoSelId);
+    if(p){ p.toxicoSustancia = val; }
+  }
+  renderMedicoPanel();
+}
+
+function toggleToxicologico(campo, val){
+  if(medicoSelId){
+    const p = pacientes.find(x=>x.id===medicoSelId);
+    if(p){
+      p[campo] = val;
+      if(campo==='toxicoResultado') addLog(p,'Toxicológico: '+val,'medico');
+    }
+  }
+  renderMedicoPanel();
 }
 
 function renderMedicoPanel(){
@@ -2735,7 +2905,81 @@ function renderMedicoPanel(){
       ${p.conducta?`<div class="info-panel"><div class="info-panel-title">Conducta registrada</div>
         <div style="font-size:14px;font-weight:700;margin-top:6px">📋 ${p.conducta}</div>
         ${p.medicoNota?`<div style="font-size:12px;color:var(--muted);margin-top:8px">${p.medicoNota}</div>`:''}</div>`:''}
-    ` : `<div class="card" style="margin-bottom:14px">
+    ` : `
+    <!-- CIE-10 -->
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="info-panel-title">🔬 Diagnóstico CIE-10</div>
+        <button onclick="toggleCIEModo()" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:3px 10px;border:1.5px solid var(--medico);color:var(--medico);background:transparent;border-radius:2px;cursor:pointer">
+          ${cie10Modo==='basico'?'BÁSICO ↔ COMPLETO':'COMPLETO ↔ BÁSICO'}
+        </button>
+      </div>
+      ${p.cie10?`<div style="background:var(--medico-bg);border:1.5px solid var(--medico);border-radius:4px;padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--medico)">${p.cie10.c}</span>
+        <span style="font-size:12px;color:var(--text);margin:0 8px;flex:1">${p.cie10.d}</span>
+        <button onclick="if(medicoSelId){const px=pacientes.find(x=>x.id===medicoSelId);if(px){px.cie10=null;}renderMedicoPanel();}" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:14px">✕</button>
+      </div>`:''}
+      <input type="text" class="form-input" placeholder="Buscar por código o diagnóstico..." 
+        value="${cie10Busqueda}"
+        oninput="cie10Busqueda=this.value;renderMedicoPanel()" 
+        style="margin-bottom:8px;font-size:13px">
+      <div style="max-height:160px;overflow-y:auto;border:1px solid var(--border);border-radius:2px">
+        ${cie10Filtrados().map(x=>`
+          <div onclick="selCIE10('${x.c}','${x.d}')" style="padding:6px 10px;cursor:pointer;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border);transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--medico);min-width:60px">${x.c}</span>
+            <span style="font-size:12px;color:var(--text)">${x.d}</span>
+          </div>`).join('')}
+        ${cie10Filtrados().length===0?'<div style="padding:12px;text-align:center;font-size:12px;color:var(--muted)">Sin resultados</div>':''}
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace">
+        Modo: ${cie10Modo.toUpperCase()} — ${cie10Modo==='basico'?'~90 diagnósticos frecuentes de guardia':'Listado extendido'} · ${cie10Filtrados().length} resultados
+      </div>
+    </div>
+
+    <!-- TOXICOLÓGICO -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="info-panel-title" style="margin-bottom:10px">⚗️ Cribado Toxicológico</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        ${['Realizado','No realizado'].map(op=>`
+          <button onclick="toggleToxicologico('toxicoRealizado','${op}')" 
+            style="padding:6px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;border-radius:2px;cursor:pointer;transition:all .12s;
+            border:2px solid ${p.toxicoRealizado===op?'var(--medico)':'var(--border)'};
+            background:${p.toxicoRealizado===op?'var(--medico)':'transparent'};
+            color:${p.toxicoRealizado===op?'white':'var(--text)'}">
+            ${op}
+          </button>`).join('')}
+      </div>
+      ${p.toxicoRealizado==='Realizado'?`
+      <div style="margin-bottom:10px">
+        <div class="form-label" style="margin-bottom:6px">Resultado</div>
+        <div style="display:flex;gap:8px">
+          ${['Negativo','Positivo','Pendiente'].map(r=>`
+            <button onclick="toggleToxicologico('toxicoResultado','${r}')"
+              style="flex:1;padding:7px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;border-radius:2px;cursor:pointer;transition:all .12s;
+              border:2px solid ${p.toxicoResultado===r?(r==='Positivo'?'var(--rojo)':r==='Negativo'?'var(--verde)':'var(--amarillo)'):'var(--border)'};
+              background:${p.toxicoResultado===r?(r==='Positivo'?'var(--rojo-bg,#fef2f2)':r==='Negativo'?'var(--verde-bg)':'var(--amarillo-bg)'):'transparent'};
+              color:${p.toxicoResultado===r?(r==='Positivo'?'var(--rojo)':r==='Negativo'?'var(--verde)':'var(--amarillo)'):'var(--text)'}">${r}
+            </button>`).join('')}
+        </div>
+      </div>
+      ${p.toxicoResultado==='Positivo'?`
+      <div>
+        <div class="form-label" style="margin-bottom:6px">Sustancia detectada</div>
+        <select class="form-input" onchange="selToxicoSustancia(this.value)" style="margin-bottom:8px">
+          <option value="">— Seleccionar sustancia —</option>
+          ${TOXICOS.map(t=>`<option value="${t}" ${p.toxicoSustancia===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+        ${p.toxicoSustancia==='Otra sustancia'?`
+        <input type="text" class="form-input" placeholder="Especificar sustancia..." 
+          value="${p.toxicoOtra||''}"
+          oninput="if(medicoSelId){const px=pacientes.find(x=>x.id===medicoSelId);if(px)px.toxicoOtra=this.value;}">
+        `:''}
+      </div>
+      `:''}
+      `:''}
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
       <div class="info-panel-title" style="margin-bottom:10px">Conducta Médica</div>
       <div class="conducta-grid">${conductaGrid}</div>
       <div class="form-group" style="margin-top:12px">
@@ -2799,6 +3043,7 @@ function cerrarCaso(id){
   medicoSelId=null;
   actualizarTodo();
   renderMedicoView();
+  renderMedicoColaEstados();
   document.getElementById('medico-panel').innerHTML='<div class="triage-placeholder"><div class="big-num" style="color:var(--medico-border)">MD</div><p>Episodio cerrado ✓<br>Seleccioná otro paciente</p></div>';
 }
 
