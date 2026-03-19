@@ -113,11 +113,9 @@ La aplicación es un **archivo HTML único** (`index.html`) sin dependencias ext
 ---
 
 ## Estructura del repositorio
-
 ```
 /
 ├── index.html          # Aplicación completa (todo en un archivo)
-├── netlify.toml        # Configuración de deployment
 └── README.md           # Este archivo
 ```
 
