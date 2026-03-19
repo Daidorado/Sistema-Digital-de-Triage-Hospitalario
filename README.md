@@ -191,10 +191,16 @@ El protocolo de medicación fue desarrollado como referencia clínica para el di
 
 ---
 
+## Autoría
+
+Desarrollado íntegramente por **Lic. Daiana M. Dorado** — Licenciada en Enfermería con especialización en urgencias y estudiante de Tecnicatura en IA y Ciencias de Datos. Obra registrada ante la Dirección Nacional del Derecho de Autor (Argentina), expediente en trámite, 2026.
+
+---
+
 ## Licencia
 
 Proyecto personal de portfolio — Lic. Daiana M. Dorado · 2026
 
 ---
 
-**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · 2026 
+**TRIAGE DIGITAL** · Lic. Daiana M. Dorado · 2026
