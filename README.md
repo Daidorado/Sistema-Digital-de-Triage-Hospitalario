@@ -193,8 +193,9 @@ El protocolo de medicación fue desarrollado como referencia clínica para el di
 
 ## Autoría
 
-Desarrollado íntegramente por **Lic. Daiana M. Dorado** — Licenciada en Enfermería con especialización en urgencias y estudiante de Tecnicatura en IA y Ciencias de Datos. Obra registrada ante la Dirección Nacional del Derecho de Autor (Argentina), expediente en trámite, 2026.
-
+Desarrollado íntegramente por **Lic. Daiana M. Dorado** — Licenciada en Enfermería con experiencia en urgencias, UTI e internado y estudiante de Tecnicatura en IA y Ciencias de Datos. Obra registrada ante la Dirección Nacional del Derecho de Autor (Argentina).
+> Registro de Propiedad Intelectual — DNDA  
+> Expediente EX-2026-25465614-APN-DNDA#MJ · Autoría: Lic. Daiana M. Dorado · 2026
 ---
 
 ## Licencia
